@@ -190,7 +190,7 @@ export function ChatPanel({ notebook }: Props) {
         </div>
         <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-zinc-900 border border-white/10 text-[9px] font-black uppercase tracking-tighter text-zinc-400">
            <Cpu className="h-2.5 w-2.5 text-blue-500" />
-           Llama-3.1-70B
+           Gemini Flash
         </div>
       </header>
 

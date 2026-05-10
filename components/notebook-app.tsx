@@ -41,7 +41,7 @@ export function NotebookApp() {
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Cloud Engine Active</span>
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Gemini Engine Active</span>
           </div>
           <a
             href="https://github.com/joedaniel/notebook"

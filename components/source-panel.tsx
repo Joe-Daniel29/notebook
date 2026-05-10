@@ -155,7 +155,7 @@ export function SourcePanel({ notebook, onUploaded, onClear }: Props) {
                  </div>
                  <div className="flex items-center justify-between">
                     <span className="text-[11px] text-zinc-400">Vector Storage</span>
-                    <span className="text-[10px] font-mono text-zinc-600">Qdrant Cloud</span>
+                    <span className="text-[10px] font-mono text-zinc-600">In-Memory DB</span>
                  </div>
                  <div className="flex items-center justify-between">
                     <span className="text-[11px] text-zinc-400">Chunk Density</span>

@@ -12,8 +12,7 @@ const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 // We use the gemini-embedding-001 model for high-fidelity retrieval.
 const EMBED_MODEL = "models/gemini-embedding-001"
 
-// Gemini 1.5 Flash is fast and excellent for document-based reasoning.
-const CHAT_MODEL = "models/gemini-1.5-flash"
+const CHAT_MODEL = "models/gemini-flash-latest"
 
 function getApiKey(): string {
   const key = process.env.GEMINI_API_KEY
@@ -55,39 +54,15 @@ export async function embed(text: string, inputType: InputType): Promise<number[
 }
 
 /**
- * Embed multiple texts using batchEmbedContents.
+ * Embed multiple texts by mapping over individual embedContent requests.
+ * This bypasses potential restrictions on the batchEmbedContents endpoint.
  */
 export async function embedBatch(texts: string[], inputType: InputType): Promise<number[][]> {
-  const BATCH = 32
+  // We'll process them sequentially to avoid rate limits
   const out: number[][] = []
-  const taskType = inputType === "passage" ? "RETRIEVAL_DOCUMENT" : "RETRIEVAL_QUERY"
-
-  for (let i = 0; i < texts.length; i += BATCH) {
-    const slice = texts.slice(i, i + BATCH)
-    
-    const requests = slice.map(text => ({
-      model: EMBED_MODEL,
-      content: { parts: [{ text }] },
-      taskType: taskType,
-    }))
-
-    const res = await fetch(`${GEMINI_BASE_URL}/${EMBED_MODEL}:batchEmbedContents?key=${getApiKey()}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ requests }),
-    })
-
-    if (!res.ok) {
-      const body = await res.text()
-      throw new Error(`Batch embedding failed (${res.status}): ${body}`)
-    }
-
-    const json = await res.json()
-    for (const embedding of json.embeddings) {
-      out.push(embedding.values)
-    }
+  for (const text of texts) {
+    const embedding = await embed(text, inputType)
+    out.push(embedding)
   }
   return out
 }
