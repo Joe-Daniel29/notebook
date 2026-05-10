@@ -56,8 +56,8 @@ export async function POST(req: Request) {
     }
   }
 
-  // Only throw 404 if we are NOT using Qdrant and have no local chunks
-  if (chunks.length === 0 && process.env.USE_QDRANT !== "true") {
+  // Only throw 404 if we have no local chunks
+  if (chunks.length === 0) {
     return new Response(
       JSON.stringify({
         error:
@@ -77,26 +77,8 @@ export async function POST(req: Request) {
   try {
     const queryEmbedding = await embed(lastUser.content, "query")
 
-    if (process.env.USE_QDRANT === "true") {
-      try {
-        const { searchQdrant } = await import("@/lib/qdrant-experiment")
-        const results = await searchQdrant(queryEmbedding, 5)
-        topK = results.map((r: any) => ({
-          id: r.id,
-          text: r.payload.text,
-          index: r.payload.index,
-          score: r.score,
-        }))
-        console.log(`✅ Retrieved ${topK.length} sources from Qdrant Cloud.`)
-      } catch (qErr) {
-        console.error("❌ Qdrant search failed, falling back to local:", qErr)
-      }
-    }
-
-    if (topK.length === 0) {
-      const { searchInChunks } = await import("@/lib/store")
-      topK = searchInChunks(chunks, queryEmbedding, 5)
-    }
+    const { searchInChunks } = await import("@/lib/store")
+    topK = searchInChunks(chunks, queryEmbedding, 5)
   } catch (err) {
     console.error("[v0] retrieval error:", err)
     const message = err instanceof Error ? err.message : "Unknown error"

@@ -9,8 +9,8 @@
 
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 
-// We use the text-embedding-004 model for high-fidelity retrieval.
-const EMBED_MODEL = "models/text-embedding-004"
+// We use the gemini-embedding-001 model for high-fidelity retrieval.
+const EMBED_MODEL = "models/gemini-embedding-001"
 
 // Gemini 1.5 Flash is fast and excellent for document-based reasoning.
 const CHAT_MODEL = "models/gemini-1.5-flash"

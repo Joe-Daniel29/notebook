@@ -66,18 +66,6 @@ export async function POST(req: Request) {
       embedding: embeddings[i],
     }))
 
-    // Experiment: Production-grade Qdrant Integration
-    if (process.env.USE_QDRANT === "true") {
-      try {
-        const { initQdrantCollection, uploadToQdrant } = await import("@/lib/qdrant-experiment")
-        await initQdrantCollection()
-        await uploadToQdrant(notebook.id, chunks, embeddings)
-        console.log("✅ Document successfully indexed in Qdrant Cloud.")
-      } catch (qErr) {
-        console.error("❌ Qdrant indexing failed, falling back to in-memory:", qErr)
-      }
-    }
-
     addChunks(notebook.id, stored)
 
     return NextResponse.json({
